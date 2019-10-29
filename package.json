@@ -1,0 +1,34 @@
+{
+	"name": "active-window-shortcuts",
+	"version": "0.1.0",
+	"author": "Philipp Kühn",
+	"license": "MIT",
+	"homepage": "https://github.com/philippkuehn/active-window-shortcuts#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/philippkuehn/active-window-shortcuts.git"
+	},
+	"engines": {
+		"node": ">=8"
+	},
+  "bugs": {
+    "url": "https://github.com/philippkuehn/active-window-shortcuts/issues"
+  },
+	"scripts": {
+		"start": "swift ./Sources/active-window-shortcuts/main.swift",
+		"build": "swift build --configuration=release --static-swift-stdlib && mv .build/release/active-window-shortcuts main",
+		"prepublish": "npm run build"
+	},
+	"files": [
+		"index.js",
+		"lib",
+		"main"
+	],
+	"keywords": [
+		"macos",
+		"app",
+		"application",
+		"window",
+		"shortcuts"
+	]
+}
