@@ -39,18 +39,28 @@ func getMenuItems(app: NSRunningApplication) -> NSMutableArray {
 	let shortcuts = [] as NSMutableArray
 	let app = AXUIElementCreateApplication(app.processIdentifier)
 
-	guard let menuBar = getValue(of: app, attribute: kAXMenuBarAttribute, as: AXUIElement.self) else {
-		return shortcuts
-	}
-	guard let items = getValue(of: menuBar, attribute: kAXChildrenAttribute, as: NSArray.self) else {
+	guard let menuBar = getValue(
+		of: app,
+		attribute: kAXMenuBarAttribute,
+		as: AXUIElement.self
+	) else {
 		return shortcuts
 	}
 
-	for item in items {
-		guard let group = getValue(of: item as! AXUIElement, attribute: kAXTitleAttribute, as: String.self) else {
-			continue
-		}
-		guard let items2 = getValue(of: item as! AXUIElement, attribute: kAXChildrenAttribute, as: NSArray.self) else {
+	guard let menuBarItems = getValue(
+		of: menuBar,
+		attribute: kAXChildrenAttribute,
+		as: NSArray.self
+	) else {
+		return shortcuts
+	}
+
+	for menuBarItem in menuBarItems {
+		guard let group = getValue(
+			of: menuBarItem as! AXUIElement,
+			attribute: kAXTitleAttribute,
+			as: String.self
+		) else {
 			continue
 		}
 
@@ -58,29 +68,55 @@ func getMenuItems(app: NSRunningApplication) -> NSMutableArray {
 			continue
 		}
 
-		for item2 in items2 {
-			guard let items3 = getValue(of: item2 as! AXUIElement, attribute: kAXChildrenAttribute, as: NSArray.self) else {
+		guard let menus = getValue(
+			of: menuBarItem as! AXUIElement,
+			attribute: kAXChildrenAttribute,
+			as: NSArray.self
+		) else {
+			continue
+		}
+
+		for menu in menus {
+			guard let menuItems = getValue(
+				of: menu as! AXUIElement,
+				attribute: kAXChildrenAttribute,
+				as: NSArray.self
+			) else {
 				continue
 			}
 
-			for item3 in items3 {
-				guard let title3 = getValue(of: item3 as! AXUIElement, attribute: kAXTitleAttribute, as: String.self) else {
-					continue
-				}
-				guard let cmdchar = getValue(of: item3 as! AXUIElement, attribute: kAXMenuItemCmdCharAttribute, as: String.self) else {
-					continue
-				}
-				guard let cmdmod = getValue(of: item3 as! AXUIElement, attribute: kAXMenuItemCmdModifiersAttribute, as: Int.self) else {
+			for menuItem in menuItems {
+				guard let title = getValue(
+					of: menuItem as! AXUIElement,
+					attribute: kAXTitleAttribute,
+					as: String.self
+				) else {
 					continue
 				}
 
-				if title3 == "" {
+				if title == "" {
+					continue
+				}
+
+				guard let cmdchar = getValue(
+					of: menuItem as! AXUIElement,
+					attribute: kAXMenuItemCmdCharAttribute,
+					as: String.self
+				) else {
+					continue
+				}
+
+				guard let cmdmod = getValue(
+					of: menuItem as! AXUIElement,
+					attribute: kAXMenuItemCmdModifiersAttribute,
+					as: Int.self
+				) else {
 					continue
 				}
 
 				let shortcut: [String: Any] = [
 					"group": group as Any,
-					"title": title3 as Any,
+					"title": title as Any,
 					"char": cmdchar as Any,
 					"mods": modifiers[cmdmod],
 				]
