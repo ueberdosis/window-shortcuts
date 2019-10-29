@@ -69,7 +69,7 @@ func getMenuItems(app: NSRunningApplication) -> NSMutableArray {
 					"group": group as Any,
 					"title": title3 as Any,
 					"char": cmdchar as Any,
-					"mods": modifiers[cmdmod as! Int],
+					"mods": modifiers[cmdmod ?? 8],
 				]
 
 				shortcuts.add(shortcut)
