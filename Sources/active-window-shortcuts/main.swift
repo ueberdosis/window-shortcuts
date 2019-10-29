@@ -38,30 +38,43 @@ func getValue<T>(of element: AXUIElement, attribute: String, as type: T.Type) ->
 func getMenuItems(app: NSRunningApplication) -> NSMutableArray {
 	let shortcuts = [] as NSMutableArray
 	let app = AXUIElementCreateApplication(app.processIdentifier)
-	let menuBar = getValue(of: app, attribute: kAXMenuBarAttribute, as: AnyObject.self)
-	let items = getValue(of: menuBar as! AXUIElement, attribute: kAXChildrenAttribute, as: NSArray.self)
 
-	for item in items ?? [] {
-		let group = getValue(of: item as! AXUIElement, attribute: kAXTitleAttribute, as: String.self)
-		let items2 = getValue(of: item as! AXUIElement, attribute: kAXChildrenAttribute, as: NSArray.self)
+	guard let menuBar = getValue(of: app, attribute: kAXMenuBarAttribute, as: AXUIElement.self) else {
+		return shortcuts
+	}
+	guard let items = getValue(of: menuBar, attribute: kAXChildrenAttribute, as: NSArray.self) else {
+		return shortcuts
+	}
+
+	for item in items {
+		guard let group = getValue(of: item as! AXUIElement, attribute: kAXTitleAttribute, as: String.self) else {
+			continue
+		}
+		guard let items2 = getValue(of: item as! AXUIElement, attribute: kAXChildrenAttribute, as: NSArray.self) else {
+			continue
+		}
 
 		if group == "Apple" {
 			continue
 		}
 
-		for item2 in items2 ?? [] {
-			let items3 = getValue(of: item2 as! AXUIElement, attribute: kAXChildrenAttribute, as: NSArray.self)
+		for item2 in items2 {
+			guard let items3 = getValue(of: item2 as! AXUIElement, attribute: kAXChildrenAttribute, as: NSArray.self) else {
+				continue
+			}
 
-			for item3 in items3 ?? [] {
-				let title3 = getValue(of: item3 as! AXUIElement, attribute: kAXTitleAttribute, as: String.self)
-				let cmdchar = getValue(of: item3 as! AXUIElement, attribute: kAXMenuItemCmdCharAttribute, as: String.self)
-				let cmdmod = getValue(of: item3 as! AXUIElement, attribute: kAXMenuItemCmdModifiersAttribute, as: Int.self)
-
-				if title3 == "" {
+			for item3 in items3 {
+				guard let title3 = getValue(of: item3 as! AXUIElement, attribute: kAXTitleAttribute, as: String.self) else {
+					continue
+				}
+				guard let cmdchar = getValue(of: item3 as! AXUIElement, attribute: kAXMenuItemCmdCharAttribute, as: String.self) else {
+					continue
+				}
+				guard let cmdmod = getValue(of: item3 as! AXUIElement, attribute: kAXMenuItemCmdModifiersAttribute, as: Int.self) else {
 					continue
 				}
 
-				if cmdchar == nil {
+				if title3 == "" {
 					continue
 				}
 
@@ -69,7 +82,7 @@ func getMenuItems(app: NSRunningApplication) -> NSMutableArray {
 					"group": group as Any,
 					"title": title3 as Any,
 					"char": cmdchar as Any,
-					"mods": modifiers[cmdmod ?? 8],
+					"mods": modifiers[cmdmod],
 				]
 
 				shortcuts.add(shortcut)
@@ -87,6 +100,19 @@ for window in windows {
 	let windowOwnerPID = window[kCGWindowOwnerPID as String] as! Int
 
 	if windowOwnerPID != frontmostAppPID {
+		continue
+	}
+
+	// Skip transparent windows, like with Chrome
+	if (window[kCGWindowAlpha as String] as! Double) == 0 {
+		continue
+	}
+
+	let bounds = CGRect(dictionaryRepresentation: window[kCGWindowBounds as String] as! CFDictionary)!
+
+	// Skip tiny windows, like the Chrome link hover statusbar
+	let minWinSize: CGFloat = 50
+	if bounds.width < minWinSize || bounds.height < minWinSize {
 		continue
 	}
 
