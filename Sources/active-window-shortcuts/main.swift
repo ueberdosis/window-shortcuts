@@ -3,20 +3,20 @@ import AppKit
 let modifiers = [
 	["Meta"],
 	["Shift", "Meta"],
-	["Option", "Meta"],
-	["Option", "Shift", "Meta"],
+	["Alt", "Meta"],
+	["Alt", "Shift", "Meta"],
 	["Control", "Meta"],
 	["Control", "Shift", "Meta"],
-	["Control", "Option", "Meta"],
-	["Control", "Option", "Shift", "Meta"],
+	["Control", "Alt", "Meta"],
+	["Control", "Alt", "Shift", "Meta"],
 	[],
 	["Shift"],
-	["Option"],
-	["Option", "Shift"],
+	["Alt"],
+	["Alt", "Shift"],
 	["Control"],
 	["Control", "Shift"],
-	["Control", "Option"],
-	["Control", "Option", "Shift"],
+	["Control", "Alt"],
+	["Control", "Alt", "Shift"],
 ]
 
 func toJson<T>(_ data: T) throws -> String {
@@ -65,10 +65,9 @@ func getShortcut(menuItem: AXUIElement, group: String) -> [String: Any]? {
 	}
 
 	let shortcut = [
-		// "group": group as Any,
 		"group": group as Any,
 		"title": title as Any,
-		"char": cmdchar as Any,
+		"char": cmdchar.lowercased() as Any,
 		"mods": modifiers[cmdmod],
 	]
 
