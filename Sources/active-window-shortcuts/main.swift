@@ -35,6 +35,46 @@ func getValue<T>(of element: AXUIElement, attribute: String, as type: T.Type) ->
 	return nil
 }
 
+func getShortcut(menuItem: AXUIElement, group: String) -> [String: Any]? {
+	guard let title = getValue(
+		of: menuItem,
+		attribute: kAXTitleAttribute,
+		as: String.self
+	) else {
+		return nil
+	}
+
+	if title == "" {
+		return nil
+	}
+
+	guard let cmdchar = getValue(
+		of: menuItem,
+		attribute: kAXMenuItemCmdCharAttribute,
+		as: String.self
+	) else {
+		return nil
+	}
+
+	guard let cmdmod = getValue(
+		of: menuItem,
+		attribute: kAXMenuItemCmdModifiersAttribute,
+		as: Int.self
+	) else {
+		return nil
+	}
+
+	let shortcut = [
+		// "group": group as Any,
+		"group": group as Any,
+		"title": title as Any,
+		"char": cmdchar as Any,
+		"mods": modifiers[cmdmod],
+	]
+
+	return shortcut
+}
+
 func getMenuItems(app: NSRunningApplication) -> NSMutableArray {
 	let shortcuts = [] as NSMutableArray
 	let app = AXUIElementCreateApplication(app.processIdentifier)
@@ -86,7 +126,15 @@ func getMenuItems(app: NSRunningApplication) -> NSMutableArray {
 			}
 
 			for menuItem in menuItems {
-				guard let title = getValue(
+				guard let subMenus = getValue(
+					of: menuItem as! AXUIElement,
+					attribute: kAXChildrenAttribute,
+					as: NSArray.self
+				) else {
+					continue
+				}
+
+				guard let subGroup = getValue(
 					of: menuItem as! AXUIElement,
 					attribute: kAXTitleAttribute,
 					as: String.self
@@ -94,32 +142,29 @@ func getMenuItems(app: NSRunningApplication) -> NSMutableArray {
 					continue
 				}
 
-				if title == "" {
-					continue
+				if subMenus.count > 0 {
+					for subMenu in subMenus {
+						guard let subMenusItems = getValue(
+							of: subMenu as! AXUIElement,
+							attribute: kAXChildrenAttribute,
+							as: NSArray.self
+						) else {
+							continue
+						}
+
+						for subMenusItem in subMenusItems {
+							guard let subShortcut = getShortcut(menuItem: subMenusItem as! AXUIElement, group: subGroup) else {
+								continue
+							}
+
+							shortcuts.add(subShortcut)
+						}
+					}
 				}
 
-				guard let cmdchar = getValue(
-					of: menuItem as! AXUIElement,
-					attribute: kAXMenuItemCmdCharAttribute,
-					as: String.self
-				) else {
+				guard let shortcut = getShortcut(menuItem: menuItem as! AXUIElement, group: group) else {
 					continue
 				}
-
-				guard let cmdmod = getValue(
-					of: menuItem as! AXUIElement,
-					attribute: kAXMenuItemCmdModifiersAttribute,
-					as: Int.self
-				) else {
-					continue
-				}
-
-				let shortcut: [String: Any] = [
-					"group": group as Any,
-					"title": title as Any,
-					"char": cmdchar as Any,
-					"mods": modifiers[cmdmod],
-				]
 
 				shortcuts.add(shortcut)
 			}
