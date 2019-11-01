@@ -14,5 +14,5 @@ const parseMac = stdout => {
 	}
 }
 
-module.exports = () => parseMac(execFileSync(bin, { encoding: 'utf8' }))
+module.exports = app => parseMac(execFileSync(bin, [app], { encoding: 'utf8' }))
 
