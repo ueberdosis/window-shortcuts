@@ -15,7 +15,7 @@
     "url": "https://github.com/philippkuehn/window-shortcuts/issues"
   },
 	"scripts": {
-		"start": "swift ./Sources/window-shortcuts/main.swift iTerm2",
+		"start": "swift ./Sources/window-shortcuts/main.swift",
 		"build": "swift build --configuration=release --static-swift-stdlib && mv .build/release/window-shortcuts main",
 		"prepublish": "npm run build"
 	},
