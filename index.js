@@ -1,18 +1,38 @@
 const path = require('path')
-const { execFileSync } = require('child_process')
+const { promisify } = require('util')
+const { execFile, execFileSync } = require('child_process')
+
+const promisedExecFile = promisify(execFile)
 const bin = path.join(__dirname, './main')
 
-const parseMac = stdout => {
+const parseJSON = string => {
 	try {
-		const result = JSON.parse(stdout)
-		if (result !== null) {
-			result.platform = 'macos'
-			return result
-		}
+		return JSON.parse(string)
 	} catch (error) {
-		throw new Error('Error parsing window data')
+		throw new Error('Error parsing data')
 	}
 }
 
-module.exports = app => parseMac(execFileSync(bin, [app], { encoding: 'utf8' }))
+const getOutput = stdout => {
+	try {
+		const callback = parseJSON(stdout)
 
+		if (callback.error) {
+			throw new Error(callback.error)
+		} else {
+			return callback
+		}
+	} catch (error) {
+		throw new Error(error)
+	}
+}
+
+module.exports = async app => {
+	const { stdout } = await promisedExecFile(bin, [app])
+	return getOutput(stdout)
+}
+
+module.exports.sync = app => {
+	const stdout = execFileSync(bin, [app], { encoding: 'utf8' })
+	return getOutput(stdout)
+}
