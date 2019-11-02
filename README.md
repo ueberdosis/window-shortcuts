@@ -1,1 +1,1 @@
-# active-window-shortcuts
+# window-shortcuts

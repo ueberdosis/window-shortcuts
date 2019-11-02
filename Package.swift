@@ -2,8 +2,8 @@
 import PackageDescription
 
 let package = Package(
-	name: "active-window-shortcuts",
+	name: "window-shortcuts",
 	targets: [
-		.target(name: "active-window-shortcuts")
+		.target(name: "window-shortcuts")
 	]
 )

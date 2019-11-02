@@ -1,22 +1,22 @@
 {
-	"name": "active-window-shortcuts",
+	"name": "window-shortcuts",
 	"version": "0.1.4",
 	"author": "Philipp Kühn",
 	"license": "MIT",
-	"homepage": "https://github.com/philippkuehn/active-window-shortcuts#readme",
+	"homepage": "https://github.com/philippkuehn/window-shortcuts#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/philippkuehn/active-window-shortcuts.git"
+    "url": "git+https://github.com/philippkuehn/window-shortcuts.git"
 	},
 	"engines": {
 		"node": ">=8"
 	},
   "bugs": {
-    "url": "https://github.com/philippkuehn/active-window-shortcuts/issues"
+    "url": "https://github.com/philippkuehn/window-shortcuts/issues"
   },
 	"scripts": {
-		"start": "swift ./Sources/active-window-shortcuts/main.swift",
-		"build": "swift build --configuration=release --static-swift-stdlib && mv .build/release/active-window-shortcuts main",
+		"start": "swift ./Sources/window-shortcuts/main.swift iTerm2",
+		"build": "swift build --configuration=release --static-swift-stdlib && mv .build/release/window-shortcuts main",
 		"prepublish": "npm run build"
 	},
 	"files": [
