@@ -67,8 +67,7 @@ func getShortcut(menuItem: AXUIElement, group: String) -> [String: Any]? {
 	let shortcut = [
 		"group": group as Any,
 		"title": title as Any,
-		"char": cmdchar.lowercased() as Any,
-		"mods": modifiers[cmdmod],
+		"keys": modifiers[cmdmod] + [cmdchar.lowercased() as Any],
 	]
 
 	return shortcut

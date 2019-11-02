@@ -23,26 +23,25 @@ windowShortcuts('iTerm2')
     [
       {
         "title": "Preferences...",
-        "mods": [
-          "Meta"
+        "keys": [
+          "Meta",
+          ","
         ],
-        "char": ",",
         "group": "iTerm2"
       },
       {
-        "mods": [
-          "Meta"
+        "keys": [
+          "Meta",
+          "h",
         ],
         "title": "Hide iTerm2",
         "group": "iTerm2",
-        "char": "h"
       },
       ...
     ]
     */
   })
   .catch(error => console.log(error))
-
 ```
 
 ### Sync
