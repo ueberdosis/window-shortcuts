@@ -3,16 +3,16 @@
 	"version": "0.2.0",
 	"author": "Philipp Kühn",
 	"license": "MIT",
-	"homepage": "https://github.com/philippkuehn/window-shortcuts#readme",
+	"homepage": "https://github.com/ueberdosis/window-shortcuts#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/philippkuehn/window-shortcuts.git"
+    "url": "git+https://github.com/ueberdosis/window-shortcuts.git"
 	},
 	"engines": {
 		"node": ">=8"
 	},
   "bugs": {
-    "url": "https://github.com/philippkuehn/window-shortcuts/issues"
+    "url": "https://github.com/ueberdosis/window-shortcuts/issues"
   },
 	"scripts": {
 		"start": "swift ./Sources/window-shortcuts/main.swift",
