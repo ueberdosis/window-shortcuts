@@ -1,31 +1,31 @@
 import AppKit
 
 let modifiers = [
-    ["Meta"],
-    ["Shift", "Meta"],
-    ["Alt", "Meta"],
-    ["Alt", "Shift", "Meta"],
-    ["Control", "Meta"],
-    ["Control", "Shift", "Meta"],
-    ["Control", "Alt", "Meta"],
-    ["Control", "Alt", "Shift", "Meta"],
-    [],
-    ["Shift"],
-    ["Alt"],
-    ["Alt", "Shift"],
-    ["Control"],
-    ["Control", "Shift"],
-    ["Control", "Alt"],
-    ["Control", "Alt", "Shift"],
-    [],
-    [],
-    [],
-    [],
-    [],
-    [],
-    [],
-    [],
-    ["Fn"],
+	["Meta"],
+	["Shift", "Meta"],
+	["Alt", "Meta"],
+	["Alt", "Shift", "Meta"],
+	["Control", "Meta"],
+	["Control", "Shift", "Meta"],
+	["Control", "Alt", "Meta"],
+	["Control", "Alt", "Shift", "Meta"],
+	[],
+	["Shift"],
+	["Alt"],
+	["Alt", "Shift"],
+	["Control"],
+	["Control", "Shift"],
+	["Control", "Alt"],
+	["Control", "Alt", "Shift"],
+	[],
+	[],
+	[],
+	[],
+	[],
+	[],
+	[],
+	[],
+	["Fn"],
 ]
 
 func toJson<T>(_ data: T) throws -> String {
@@ -72,20 +72,20 @@ func getShortcut(menuItem: AXUIElement, group: String) -> [String: Any]? {
 	) else {
 		return nil
 	}
-    
-    if modifiers.indices.contains(cmdmod) && modifiers[cmdmod].count != 0 {
-        let shortcut = [
-            "group": group as Any,
-            "title": title as Any,
-            "keys": modifiers[cmdmod] + [cmdchar.lowercased() as Any],
-        ]
-        
-        return shortcut
-    } else {
-        print("Shortcut '\(title)' is missing modifiers at index '\(cmdmod)'")
-    }
-    
-    return nil
+	
+	if modifiers.indices.contains(cmdmod) && modifiers[cmdmod].count != 0 {
+		let shortcut = [
+			"group": group as Any,
+			"title": title as Any,
+			"keys": modifiers[cmdmod] + [cmdchar.lowercased() as Any],
+		]
+		
+		return shortcut
+	} else {
+		print("Shortcut '\(title)' is missing modifiers at index '\(cmdmod)'")
+	}
+	
+	return nil
 }
 
 func getShortcuts(app: NSRunningApplication) -> NSMutableArray {
