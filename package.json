@@ -1,19 +1,19 @@
 {
 	"name": "window-shortcuts",
-	"version": "0.2.0",
+	"version": "0.3.0",
 	"author": "Philipp Kühn",
 	"license": "MIT",
 	"homepage": "https://github.com/ueberdosis/window-shortcuts#readme",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/ueberdosis/window-shortcuts.git"
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/ueberdosis/window-shortcuts.git"
 	},
 	"engines": {
 		"node": ">=8"
 	},
-  "bugs": {
-    "url": "https://github.com/ueberdosis/window-shortcuts/issues"
-  },
+	"bugs": {
+		"url": "https://github.com/ueberdosis/window-shortcuts/issues"
+	},
 	"scripts": {
 		"start": "swift ./Sources/window-shortcuts/main.swift",
 		"build": "swift build --configuration=release --static-swift-stdlib && mv .build/release/window-shortcuts main",
